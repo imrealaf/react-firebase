@@ -10,13 +10,16 @@
 
 - Authentication state is automatically handled and maintained for you using [RxJS](https://rxjs.dev/) under the hood
 
-## Installation
+## Getting Started
 
-Simply install the npm package along with it's dependencies
+Simply install the package along with it's dependencies
 
 ```sh
 yarn add fm-react-firebase firebase swr
+```
 
-# or
+or
+
+```sh
 npm install fm-react-firebase firebase swr
 ```
