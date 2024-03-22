@@ -64,10 +64,8 @@ export type AuthErrorCode =
   | "auth/too-many-requests";
 
 export type AuthError = {
-  code: AuthErrorCode | string;
+  code: AuthErrorCode;
   message: string;
 };
 
-export type AuthErrorMessages = {
-  [key: AuthErrorCode | string]: string;
-};
+export type AuthErrorMessages = Record<AuthErrorCode, string>;

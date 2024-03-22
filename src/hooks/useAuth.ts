@@ -17,13 +17,6 @@ export interface UseAuthOptions {
 }
 
 /**
- * Default useAuth options
- */
-const defaultOptions: UseAuthOptions = {
-  errorMessages: defaultAuthErrorMessages,
-};
-
-/**
  * useAuth
  */
 function useAuth(options: UseAuthOptions = {}) {
@@ -45,7 +38,7 @@ function useAuth(options: UseAuthOptions = {}) {
    * Error messages
    */
   const errorMessages: AuthErrorMessages = {
-    ...defaultOptions.errorMessages,
+    ...defaultAuthErrorMessages,
     ...options?.errorMessages,
   };
 
