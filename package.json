@@ -1,0 +1,58 @@
+{
+  "name": "fm-react-firebase",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "dev": "tsup --dts --watch",
+    "build": "tsup --dts",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "pub": "yarn build && npm version patch --force && npm publish",
+    "pub:minor": "yarn build && npm version minor --force && npm publish",
+    "pub:major": "yarn build && npm version major --force && npm publish"
+  },
+  "author": "fariamedia (Andrew Faria)",
+  "license": "MIT",
+  "dependencies": {
+    "@hungry-egg/rx-react": "^1.0.2",
+    "@hungry-egg/rx-state": "^1.0.3",
+    "lodash": "^4.17.21",
+    "rxjs": "^7.8.1"
+  },
+  "peerDependencies": {
+    "firebase": "^10.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "swr": "^2.2.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@babel/preset-typescript": "^7.23.3",
+    "@testing-library/react": "^14.2.1",
+    "@types/jest": "^29.5.12",
+    "@types/lodash": "^4.17.0",
+    "@types/node": "^20.11.26",
+    "@types/react": "^18.2.64",
+    "@types/react-dom": "^18.2.21",
+    "@types/whatwg-fetch": "^0.0.33",
+    "babel-jest": "^29.7.0",
+    "babel-loader": "^8.3.0",
+    "firebase": "^10.8.1",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "swr": "^2.2.5",
+    "ts-jest": "^29.1.2",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "whatwg-fetch": "^3.6.20"
+  }
+}
