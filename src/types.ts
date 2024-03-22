@@ -1,5 +1,5 @@
+import { User } from "firebase/auth";
 import { FieldPath, OrderByDirection, WhereFilterOp } from "firebase/firestore";
-import { SWRConfiguration } from "swr";
 
 /**
  * Document
@@ -49,4 +49,25 @@ export type CollectionQuery<Doc extends object = {}> = {
   limit?: number;
   orderBy?: OrderByQuery<Doc>;
   where?: WhereQuery<Doc>;
+};
+
+/**
+ * Auth
+ */
+
+export type AuthHandler = (user: User | null) => void;
+
+export type AuthErrorCode =
+  | "auth/invalid-email"
+  | "auth/user-not-found"
+  | "auth/wrong-password"
+  | "auth/too-many-requests";
+
+export type AuthError = {
+  code: AuthErrorCode | string;
+  message: string;
+};
+
+export type AuthErrorMessages = {
+  [key: AuthErrorCode | string]: string;
 };
