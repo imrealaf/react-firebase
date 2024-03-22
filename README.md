@@ -1,4 +1,4 @@
-# SWR + Firestore
+# React Firebase
 
 ### The fastest and most efficient way to use Firebase in a React application
 
