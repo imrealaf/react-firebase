@@ -69,3 +69,24 @@ export type AuthError = {
 };
 
 export type AuthErrorMessages = Record<AuthErrorCode, string>;
+
+/**
+ * App
+ */
+
+export type EmulatorOption =
+  | boolean
+  | {
+      port: number;
+    };
+
+export type Emulator =
+  | "auth"
+  | "firestore"
+  | "functions"
+  | "storage"
+  | "database";
+
+export type EmulatorOptions = {
+  [key in Emulator]?: EmulatorOption;
+};

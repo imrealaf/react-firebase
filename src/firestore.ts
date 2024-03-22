@@ -77,7 +77,7 @@ export async function getDocument<Doc extends Document = Document>(
  * hasMultipleWhereConditions
  * @description check if param has more than one where condition
  */
-function hasMultipleWhereConditions<Doc extends object = {}>(
+export function hasMultipleWhereConditions<Doc extends object = {}>(
   w: WhereQuery<Doc>
 ): w is WhereArray<Doc> {
   return !!(w as WhereArray) && Array.isArray(w[0]);
@@ -87,7 +87,7 @@ function hasMultipleWhereConditions<Doc extends object = {}>(
  * hasMultipleOrderByConditions
  * @description check if param has more than one orderBy condition
  */
-function hasMultipleOrderByConditions<Doc extends object = {}>(
+export function hasMultipleOrderByConditions<Doc extends object = {}>(
   o: OrderByQuery<Doc>
 ): o is OrderByArray<Doc>[] {
   return Array.isArray((o as OrderByArray<Doc>[])[0]);
@@ -158,7 +158,7 @@ export const createQuery = <Doc extends object = {}>(
 export async function getCollection<Doc extends Document = Document>(
   path: string,
   query: CollectionQuery<Doc> = {},
-  { parseDates }: DocumentOptions<Doc>
+  { parseDates }: DocumentOptions<Doc> = {}
 ) {
   const q = createQuery(path, query);
   const res = await getDocs(q);
