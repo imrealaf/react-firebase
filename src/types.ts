@@ -15,7 +15,6 @@ export type AllowType<O extends object, Allowed> = {
 
 export type DocumentOptions<Doc extends Document = Document> = {
   parseDates?: (string | keyof Omit<Doc, "id">)[];
-  swrConfig?: SWRConfiguration;
 };
 
 /**
