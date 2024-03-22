@@ -9,3 +9,14 @@
 - Easily integrate **Firebase Authentication** into your app with **zero boilerplate** using the provided auth/render functions and `useAuth` hook
 
 - Authentication state is automatically handled and maintained for you using [RxJS](https://rxjs.dev/) under the hood
+
+## Installation
+
+Simply install the npm package along with it's dependencies
+
+```sh
+yarn add fm-react-firebase firebase swr
+
+# or
+npm install fm-react-firebase firebase swr
+```
