@@ -12,7 +12,7 @@
 
 ## Getting Started
 
-Simply install the package along with it's dependencies
+Simply install the package along with it's peer dependencies
 
 ```sh
 yarn add fm-react-firebase firebase swr
@@ -22,4 +22,27 @@ or
 
 ```sh
 npm install fm-react-firebase firebase swr
+```
+
+## Firestore Documents
+
+Fetching a document is too easy with the `useDoc` hook
+
+```js
+const { data } = useDoc("posts/some-doc-id");
+```
+
+You can also use the same hook to update the document
+
+```jsx
+const { set } = useDoc("posts/some-doc-id");
+
+const updateDoc = async () => {
+    await set(dataToUpdate)
+    alert('Document was updated!')
+}
+
+return (
+    <button onClick={updateDoc}>Submit</submit>
+)
 ```
