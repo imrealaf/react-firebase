@@ -61,6 +61,7 @@ function useDoc<
     isLoading,
     isValidating,
     error,
+    notFound: data === null,
     set,
   };
 }

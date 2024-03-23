@@ -1,7 +1,7 @@
 import * as auth from "firebase/auth";
 
-import { onAuthChange } from "../auth";
-import { userClaims$ } from "../atoms";
+import { onAuthChange } from "./auth";
+import { userClaims$ } from "./atoms";
 
 jest.mock("firebase/auth", () => ({
   __esModule: true,

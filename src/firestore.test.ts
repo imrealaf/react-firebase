@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 
-import { mockGetDoc, mockGetDocs } from "./test.utils";
+import { mockGetDoc, mockGetDocs } from "./test/test.utils";
 import {
   withDocumentDatesParsed,
   getDocument,
@@ -8,7 +8,7 @@ import {
   hasMultipleWhereConditions,
   hasMultipleOrderByConditions,
   createQuery,
-} from "../firestore";
+} from "./firestore";
 
 jest.mock("firebase/firestore", () => ({
   __esModule: true,

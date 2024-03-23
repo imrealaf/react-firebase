@@ -25,6 +25,11 @@ export function mockGetDoc(path: string, data?: Record<string, any>) {
     .mockReturnValue(Promise.resolve(mockDoc(id, data)));
 }
 
+export function mockSetDoc(path: string, data?: Record<string, any>) {
+  const id = path.split("/")[1];
+  jest.spyOn(firestore, "setDoc").mockReturnValue(Promise.resolve());
+}
+
 export function mockGetDocs(data?: Record<string, Record<string, any>>) {
   let items = data
     ? Object.keys(data).map((key) => {

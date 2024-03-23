@@ -13,7 +13,7 @@ import { defaultAuthErrorMessages } from "../auth";
 
 export interface UseAuthOptions {
   /** Map of error messages corresponding to auth error code */
-  errorMessages?: AuthErrorMessages;
+  errorMessages?: Partial<AuthErrorMessages>;
 }
 
 /**
