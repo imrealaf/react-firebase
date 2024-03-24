@@ -49,7 +49,7 @@ function useDoc<
 
   /**
    * update
-   * @description used for updating a document. Updates swr cache as well
+   * @description used for updating a document. Updates swr state after success
    */
   const update = useCallback(
     async (updatedData: Partial<AllowType<DocumentData, FieldValue>>) => {
