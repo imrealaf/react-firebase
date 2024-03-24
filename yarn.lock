@@ -5026,6 +5026,11 @@ tree-kill@^1.2.2:
   resolved "https://registry.npmjs.org/tree-kill/-/tree-kill-1.2.2.tgz"
   integrity sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==
 
+ts-deepmerge@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/ts-deepmerge/-/ts-deepmerge-7.0.0.tgz#ee824dc177d452603348c7e6f3b90223434a6b44"
+  integrity sha512-WZ/iAJrKDhdINv1WG6KZIGHrZDar6VfhftG1QJFpVbOYZMYJLJOvZOo1amictRXVdBXZIgBHKswMTXzElngprA==
+
 ts-interface-checker@^0.1.9:
   version "0.1.13"
   resolved "https://registry.npmjs.org/ts-interface-checker/-/ts-interface-checker-0.1.13.tgz"

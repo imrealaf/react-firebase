@@ -1,10 +1,11 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import {
   getFirestore,
   doc,
   setDoc,
   FieldValue,
   DocumentData,
+  FirestoreError,
 } from "firebase/firestore";
 import useSWR, { SWRConfiguration } from "swr";
 
@@ -22,36 +23,57 @@ function useDoc<
 >(path: string, options: UseDocOptions = {}) {
   const { parseDates, swrConfig } = options;
 
+  const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState<FirestoreError | null>(null);
+
   /**
    * Get document on mount with SWR
    */
   const swr = useSWR<Doc | null>(
     path,
     async (path: string) => {
-      const data = await getDocument<Doc>(path, { parseDates });
-      return data;
+      setError(null);
+      try {
+        const data = await getDocument<Doc>(path, { parseDates });
+        return data;
+      } catch (error) {
+        console.log(error);
+        setError(error as FirestoreError);
+        return null;
+      }
     },
     swrConfig
   );
 
-  const { data, error, isLoading, isValidating, mutate: connectedMutate } = swr;
+  const { data, isLoading, isValidating, mutate: connectedMutate } = swr;
 
   /**
-   * set
+   * update
    * @description used for updating a document. Updates swr cache as well
    */
-  const set = useCallback(
-    (data: Partial<AllowType<DocumentData, FieldValue>>) => {
-      // @ts-ignore
-      connectedMutate((prevState = {}) => {
-        return {
-          ...prevState,
-          ...data,
-        };
-      });
+  const update = useCallback(
+    async (updatedData: Partial<AllowType<DocumentData, FieldValue>>) => {
       if (!path) return null;
+
+      setError(null);
+      setIsPending(true);
+
       const ref = doc(getFirestore(), path);
-      return setDoc(ref, data);
+      try {
+        await setDoc(ref, updatedData);
+        // @ts-ignore
+        connectedMutate((prevState = {}) => {
+          return {
+            ...prevState,
+            ...updatedData,
+          };
+        });
+      } catch (error) {
+        console.log(error);
+        setError(error as FirestoreError);
+      } finally {
+        setIsPending(false);
+      }
     },
     [path, connectedMutate]
   );
@@ -59,10 +81,12 @@ function useDoc<
   return {
     data,
     isLoading,
+    isPending,
     isValidating,
+    is404: data === null,
+    exists: Boolean(data),
     error,
-    notFound: data === null,
-    set,
+    update,
   };
 }
 

@@ -15,6 +15,7 @@
     "@types/node": "link:../node_modules/@types/node",
     "@types/react": "link:../node_modules/@types/react",
     "@types/react-dom": "link:../node_modules/@types/react-dom",
+    "deep-equal": "^2.2.3",
     "dotenv": "^16.4.5",
     "firebase": "link:../node_modules/firebase",
     "fm-mui-x": "^1.2.1",
@@ -24,12 +25,13 @@
     "react-dom": "link:../node_modules/react-dom",
     "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
+    "react-simple-wysiwyg": "^3.0.2",
     "rxjs": "link:../node_modules/rxjs",
     "swr": "link:../node_modules/swr",
     "typescript": "link:../node_modules/typescript"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -51,5 +53,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/deep-equal": "^1.0.4"
   }
 }

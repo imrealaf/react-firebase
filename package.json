@@ -23,7 +23,8 @@
     "@hungry-egg/rx-react": "^1.0.2",
     "@hungry-egg/rx-state": "^1.0.3",
     "lodash": "^4.17.21",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "ts-deepmerge": "^7.0.0"
   },
   "peerDependencies": {
     "firebase": "^10.8.1",

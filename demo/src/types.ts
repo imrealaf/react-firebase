@@ -1,7 +1,6 @@
-import { Timestamp } from "firebase/firestore";
-
 export type PostDocument = {
   title: string;
-  slug?: string;
-  createdDate?: Date;
+  createdDate: Date;
+  description?: string;
+  content?: string;
 };

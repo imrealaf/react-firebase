@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Routes from "./Routes";
 import { AppBar, Toolbar, IconButton, Typography, Button } from "@mui/material";
 import { UnstyledRouterLink } from "fm-mui-x";
-import { useAuth } from "fm-firebase-x";
+import { useAuth } from "fm-react-firebase";
 
 function App() {
   const { signOut, user } = useAuth();
@@ -12,7 +12,7 @@ function App() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            FM Firebase
+            React Firebase
           </Typography>
           <UnstyledRouterLink to="/">
             <Button color="inherit">Home</Button>

@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import { useAuth } from "fm-firebase-x";
+import { useAuth } from "fm-react-firebase";
 import { useEffect } from "react";
 
 const ProtectedRoute = () => {
