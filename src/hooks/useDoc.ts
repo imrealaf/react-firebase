@@ -13,7 +13,7 @@ import { Document, AllowType, DocumentOptions } from "../types";
 import { getDocument } from "../firestore";
 
 export type UseDocOptions = DocumentOptions & {
-  /** Optionally configure SWR in the scope of this hook */
+  /** SWR configuration options */
   swrConfig?: SWRConfiguration;
 };
 
@@ -26,9 +26,6 @@ function useDoc<
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<FirestoreError | null>(null);
 
-  /**
-   * Get document on mount with SWR
-   */
   const swr = useSWR<Doc | null>(
     path,
     async (path: string) => {
@@ -49,11 +46,11 @@ function useDoc<
 
   /**
    * update
-   * @description used for updating a document. Updates swr state after success
+   * @description used for updating a document. Updates swr state upon success
    */
   const update = useCallback(
     async (updatedData: Partial<AllowType<DocumentData, FieldValue>>) => {
-      if (!path) return null;
+      if (!path) return;
 
       setError(null);
       setIsPending(true);
