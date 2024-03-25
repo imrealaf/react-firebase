@@ -10,9 +10,10 @@ import {
   Alert,
   Grid,
 } from "@mui/material";
+import { MuiFileInput } from "mui-file-input";
 import Editor from "react-simple-wysiwyg";
 import deepEqual from "deep-equal";
-import { Document, useDoc } from "fm-react-firebase";
+import { Document, useDoc, useStorage } from "fm-react-firebase";
 import { Button, UnstyledRouterLink } from "fm-mui-x";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -27,11 +28,22 @@ function EditPost() {
     useDoc<PostDocument>(`posts/${id}`, {
       parseDates: ["createdDate"],
     });
+  const {
+    uploadFile,
+    deleteFile,
+    isPending: fileIsPending,
+  } = useStorage({
+    basePath: "images/posts",
+    autoGenerateFilenames: true,
+  });
   const [editedData, setEditedData] = useState<Partial<PostDocument>>({
     title: "",
     description: "",
     content: "",
+    image: "",
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [fileToDelete, setFileToDelete] = useState<string | null>(null);
 
   const onChange = (key: string, value: any) => {
     setEditedData({
@@ -41,6 +53,17 @@ function EditPost() {
   };
 
   const onSubmit = async () => {
+    if (fileToDelete) {
+      await deleteFile(fileToDelete);
+    }
+    if (imageFile) {
+      try {
+        const image = await uploadFile(imageFile);
+        editedData.image = image;
+      } catch (error) {
+        console.log(error);
+      }
+    }
     await update(editedData);
     setSnackbar("Post has been updated");
   };
@@ -51,6 +74,7 @@ function EditPost() {
 
   useEffect(() => {
     if (data) setEditedData(data);
+    console.log("data", data);
   }, [data]);
 
   useEffect(() => {
@@ -61,13 +85,11 @@ function EditPost() {
     if (error) setSnackbar(error.message);
   }, [error]);
 
-  useEffect(() => {
-    console.log("data", data);
-  }, [data]);
-
   return (
     <>
-      <Backdrop open={isLoading || isPending}>Loading</Backdrop>
+      <Backdrop open={isLoading || isPending || fileIsPending}>
+        Loading
+      </Backdrop>
       <Snackbar
         open={Boolean(snackbar)}
         onClose={onCloseSnackbar}
@@ -99,6 +121,36 @@ function EditPost() {
                 <Link to={`/posts/${data.id}`}>Go to Post</Link>
               </Grid>
             </Grid>
+
+            <Box mb={3}>
+              {editedData.image && !fileToDelete ? (
+                <Box>
+                  <Box>
+                    <img
+                      src={editedData.image}
+                      style={{ width: "200px", height: "auto" }}
+                    />
+                  </Box>
+                  <Button
+                    onClick={() => {
+                      setFileToDelete(editedData.image as string);
+                      setEditedData({
+                        ...editedData,
+                        image: "",
+                      });
+                    }}
+                  >
+                    Delete Image
+                  </Button>
+                </Box>
+              ) : (
+                <MuiFileInput
+                  label="Image"
+                  value={imageFile}
+                  onChange={(value) => setImageFile(value)}
+                />
+              )}
+            </Box>
 
             <Box mb={3}>
               <TextField

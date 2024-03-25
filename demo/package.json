@@ -21,6 +21,7 @@
     "fm-mui-x": "^1.2.1",
     "fm-react-firebase": "link:..",
     "lodash": "link:../node_modules/lodash",
+    "mui-file-input": "^4.0.4",
     "react": "link:../node_modules/react",
     "react-dom": "link:../node_modules/react-dom",
     "react-router-dom": "^6.22.3",

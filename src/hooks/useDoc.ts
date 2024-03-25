@@ -2,10 +2,12 @@ import { useCallback, useState } from "react";
 import {
   getFirestore,
   doc,
+  collection,
   setDoc,
   FieldValue,
   DocumentData,
   FirestoreError,
+  addDoc,
 } from "firebase/firestore";
 import useSWR, { SWRConfiguration } from "swr";
 
@@ -20,7 +22,7 @@ export type UseDocOptions = DocumentOptions & {
 function useDoc<
   Data extends object = {},
   Doc extends Document = Document<Data>
->(path: string, options: UseDocOptions = {}) {
+>(path: string | null = null, options: UseDocOptions = {}) {
   const { parseDates, swrConfig } = options;
 
   const [isPending, setIsPending] = useState(false);
@@ -43,6 +45,38 @@ function useDoc<
   );
 
   const { data, isLoading, isValidating, mutate: connectedMutate } = swr;
+
+  const add = useCallback(
+    async (
+      collectionName: string,
+      id: string | undefined,
+      newData: Partial<AllowType<DocumentData, FieldValue>>
+    ) => {
+      if (!collectionName) return;
+
+      setError(null);
+      setIsPending(true);
+
+      try {
+        (await id)
+          ? setDoc(doc(getFirestore(), collectionName, id as string), newData)
+          : addDoc(collection(getFirestore(), collectionName), newData);
+        // @ts-ignore
+        connectedMutate((prevState = {}) => {
+          return {
+            ...prevState,
+            ...newData,
+          };
+        });
+      } catch (error) {
+        console.log(error);
+        setError(error as FirestoreError);
+      } finally {
+        setIsPending(false);
+      }
+    },
+    [path, connectedMutate]
+  );
 
   /**
    * update
@@ -83,6 +117,7 @@ function useDoc<
     is404: data === null,
     exists: Boolean(data),
     error,
+    add,
     update,
   };
 }

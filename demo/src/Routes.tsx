@@ -12,6 +12,7 @@ import SignIn from "./pages/SignIn";
 import Posts from "./pages/Posts";
 import Post from "./pages/PostPage";
 import EditPost from "./pages/EditPost";
+import AddPost from "./pages/AddPost";
 import ProtectedPage from "./pages/ProtectedPage";
 
 const routes: RouteProps[] = [
@@ -42,6 +43,10 @@ const protectedRoutes: RouteProps[] = [
   {
     path: "/posts/:id/edit",
     element: <EditPost />,
+  },
+  {
+    path: "/posts/add",
+    element: <AddPost />,
   },
 ];
 

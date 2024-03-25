@@ -25,9 +25,14 @@ function App() {
               <Button color="inherit">Sign In</Button>
             </UnstyledRouterLink>
           ) : (
-            <Button color="inherit" onClick={signOut}>
-              Sign Out
-            </Button>
+            <>
+              <UnstyledRouterLink to="/posts/add">
+                <Button color="inherit">Add Post</Button>
+              </UnstyledRouterLink>
+              <Button color="inherit" onClick={signOut}>
+                Sign Out
+              </Button>
+            </>
           )}
         </Toolbar>
       </AppBar>

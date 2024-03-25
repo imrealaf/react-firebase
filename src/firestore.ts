@@ -27,7 +27,7 @@ import {
 
 /**
  * withDocumentDatesParsed
- * @description loops through keys of of dates to parse and converts from Firestore Timestamp to Javascript Date
+ * @description loops through keys of of dates to parse and converts from Firestore Timestamp to Date
  * @returns The document parsed
  */
 export function withDocumentDatesParsed<Data extends object>(
