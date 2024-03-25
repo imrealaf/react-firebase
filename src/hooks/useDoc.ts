@@ -10,6 +10,7 @@ import {
   addDoc,
 } from "firebase/firestore";
 import useSWR, { SWRConfiguration } from "swr";
+import { unset } from "lodash";
 
 import { Document, AllowType, DocumentOptions } from "../types";
 import { getDocument } from "../firestore";
@@ -18,6 +19,18 @@ export type UseDocOptions = DocumentOptions & {
   /** SWR configuration options */
   swrConfig?: SWRConfiguration;
 };
+
+function removeIdFromData<
+  Data extends object = {},
+  Doc extends Document = Document<Data>
+>(data: Doc) {
+  const output = {};
+  Object.keys(data)
+    .filter((key) => key !== "id")
+    .forEach((key) => {
+      output;
+    });
+}
 
 function useDoc<
   Data extends object = {},
@@ -89,15 +102,21 @@ function useDoc<
       setError(null);
       setIsPending(true);
 
+      const id = updatedData.id || data?.id;
       const ref = doc(getFirestore(), path);
       try {
+        // Make sure id is removed
+        unset(updatedData, "id");
+
         await setDoc(ref, updatedData);
         // @ts-ignore
         connectedMutate((prevState = {}) => {
-          return {
+          const newState = {
             ...prevState,
             ...updatedData,
           };
+          if (id) newState.id = id;
+          return newState;
         });
       } catch (error) {
         console.log(error);
