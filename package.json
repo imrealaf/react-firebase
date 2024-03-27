@@ -1,6 +1,6 @@
 {
   "name": "fm-react-firebase",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -13,24 +13,27 @@
     "build-storybook": "storybook build",
     "test": "jest",
     "test:watch": "jest --watch",
+    "bump": "npm version patch --force",
+    "bump:minor": "npm version minor --force",
+    "bump:major": "npm version major --force",
     "pub": "yarn build && npm version patch --force && npm publish",
     "pub:minor": "yarn build && npm version minor --force && npm publish",
     "pub:major": "yarn build && npm version major --force && npm publish"
   },
-  "author": "fariamedia (Andrew Faria)",
+  "author": "Andrew Faria",
   "license": "MIT",
   "dependencies": {
     "@hungry-egg/rx-react": "^1.0.2",
     "@hungry-egg/rx-state": "^1.0.3",
     "lodash": "^4.17.21",
     "rxjs": "^7.8.1",
+    "swr": "^2.2.5",
     "ts-deepmerge": "^7.0.0"
   },
   "peerDependencies": {
     "firebase": "^10.8.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "swr": "^2.2.5"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
