@@ -1,4 +1,4 @@
-import { get, set } from "lodash";
+import { get, set, omit } from "lodash";
 import {
   getFirestore,
   doc,
@@ -11,6 +11,10 @@ import {
   where as whereConstraint,
   orderBy as orderByConstraint,
   limit as limitConstraint,
+  startAt as startAtConstraint,
+  startAfter as startAfterConstraint,
+  endAt as endAtConstraint,
+  endBefore as endBeforeConstraint,
   getDocs,
 } from "firebase/firestore";
 
@@ -20,6 +24,7 @@ import {
   DocumentOptions,
   OrderByArray,
   OrderByQuery,
+  SanitizeOptions,
   WhereArray,
   WhereItem,
   WhereQuery,
@@ -46,6 +51,33 @@ export function withDocumentDatesParsed<Data extends object>(
       }
     }
   });
+
+  return doc;
+}
+
+export function withDocumentDataSanitized<Data extends object>(
+  data: Data,
+  sanitize: SanitizeOptions = {}
+) {
+  const doc = { ...omit(data, ["id"]) };
+
+  if (sanitize.stringToNum?.length) {
+    sanitize.stringToNum.forEach((key) => {
+      const value = get(doc, key);
+      if (value && typeof value === "string") {
+        set(doc, key as unknown as string, parseInt(value));
+      }
+    });
+  }
+
+  if (sanitize.numToString?.length) {
+    sanitize.numToString.forEach((key) => {
+      const value = get(doc, key);
+      if (value && typeof value === "number") {
+        set(doc, key as unknown as string, String(value));
+      }
+    });
+  }
 
   return doc;
 }
@@ -99,7 +131,15 @@ export function hasMultipleOrderByConditions<Doc extends object = {}>(
  */
 export const createQuery = <Doc extends object = {}>(
   path: string,
-  { where, orderBy, limit }: CollectionQuery<Doc>
+  {
+    where,
+    orderBy,
+    limit,
+    startAt,
+    startAfter,
+    endAt,
+    endBefore,
+  }: CollectionQuery<Doc>
 ) => {
   const constraints: QueryConstraint[] = [];
 
@@ -145,6 +185,25 @@ export const createQuery = <Doc extends object = {}>(
    */
   if (limit) {
     constraints.push(limitConstraint(limit));
+  }
+
+  /**
+   * Pagination conditions
+   */
+  if (startAt) {
+    constraints.push(startAtConstraint(startAt));
+  }
+
+  if (endAt) {
+    constraints.push(startAtConstraint(endAt));
+  }
+
+  if (startAfter) {
+    constraints.push(startAtConstraint(startAfter));
+  }
+
+  if (endBefore) {
+    constraints.push(startAtConstraint(endBefore));
   }
 
   return query(collection(getFirestore(), path), ...constraints);

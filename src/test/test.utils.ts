@@ -1,4 +1,5 @@
 import * as firestore from "firebase/firestore";
+import * as storage from "firebase/storage";
 
 export function mockUseState(setState: () => void) {
   const mock: any = (state: any) => [state, setState];
@@ -25,9 +26,12 @@ export function mockGetDoc(path: string, data?: Record<string, any>) {
     .mockReturnValue(Promise.resolve(mockDoc(id, data)));
 }
 
-export function mockSetDoc(path: string, data?: Record<string, any>) {
-  const id = path.split("/")[1];
+export function mockSetDoc() {
   jest.spyOn(firestore, "setDoc").mockReturnValue(Promise.resolve());
+}
+
+export function mockAddDoc() {
+  jest.spyOn(firestore, "addDoc").mockImplementation();
 }
 
 export function mockGetDocs(data?: Record<string, Record<string, any>>) {
@@ -48,4 +52,8 @@ export function mockGetDocs(data?: Record<string, Record<string, any>>) {
         >
       )
     );
+}
+
+export function mockUploadBytes() {
+  jest.spyOn(storage, "uploadBytesResumable").mockImplementation();
 }

@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import * as firestore from "firebase/firestore";
 
-import { mockGetDoc, mockSetDoc } from "../test/test.utils";
+import { mockGetDoc, mockSetDoc, mockAddDoc } from "../test/test.utils";
 import useDoc from "./useDoc";
 
 jest.mock("firebase/firestore", () => ({
@@ -27,19 +27,33 @@ test("gets a document with the path provided", async () => {
 });
 
 test("updates a document", async () => {
-  mockSetDoc("collection/example-doc", {
-    title: "Something",
-  });
+  mockSetDoc();
 
   const { result } = renderHook(() => useDoc("collection/example-doc"));
-  const { set } = result.current;
+  const { update } = result.current;
 
-  set({
+  update({
     title: "Something",
     something: "else",
   });
 
   waitFor(() => {
     expect(firestore.setDoc).toHaveBeenCalled();
+  });
+});
+
+test("adds a document", async () => {
+  mockAddDoc();
+
+  const { result } = renderHook(() => useDoc());
+  const { add } = result.current;
+
+  add("collection", "some-id", {
+    title: "Something",
+    something: "else",
+  });
+
+  waitFor(() => {
+    expect(firestore.addDoc).toHaveBeenCalled();
   });
 });

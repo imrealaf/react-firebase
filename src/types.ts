@@ -1,5 +1,11 @@
 import { User } from "firebase/auth";
-import { FieldPath, OrderByDirection, WhereFilterOp } from "firebase/firestore";
+import {
+  DocumentData,
+  FieldPath,
+  FieldValue,
+  OrderByDirection,
+  WhereFilterOp,
+} from "firebase/firestore";
 
 /**
  * Document
@@ -9,12 +15,18 @@ export type Document<T = {}> = T & {
   id: string;
 };
 
+export type SanitizeOptions = {
+  stringToNum?: string[];
+  numToString?: string[];
+};
+
 export type AllowType<O extends object, Allowed> = {
   [K in keyof O]: O[K] | Allowed;
 };
 
 export type DocumentOptions<Doc extends Document = Document> = {
   parseDates?: (string | keyof Omit<Doc, "id">)[];
+  sanitize?: SanitizeOptions;
 };
 
 /**
@@ -49,6 +61,10 @@ export type CollectionQuery<Doc extends object = {}> = {
   limit?: number;
   orderBy?: OrderByQuery<Doc>;
   where?: WhereQuery<Doc>;
+  startAt?: number;
+  endAt?: number;
+  startAfter?: number;
+  endBefore?: number;
 };
 
 /**

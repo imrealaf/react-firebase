@@ -7,6 +7,7 @@ import {
   UploadTaskSnapshot,
   StorageError,
   deleteObject,
+  uploadBytes,
 } from "firebase/storage";
 import { merge } from "ts-deepmerge";
 
@@ -47,6 +48,36 @@ function useStorage(options: UseStorageOptions = {}) {
   };
 
   /**
+   * uploadFile
+   * @returns
+   */
+  const uploadFile = async (
+    file: File,
+    name?: string
+  ): Promise<string | undefined> => {
+    setIsPending(true);
+
+    // Sort out filename and get reference
+    const fileName =
+      name ||
+      (autoGenerateFilenames
+        ? generateFilename((file as File).name)
+        : (file as File).name);
+    const storageRef = ref(getStorage(), `${basePath}/${fileName}`);
+
+    try {
+      const snapshot = await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(snapshot.ref);
+      return url;
+    } catch (error) {
+      console.log(error);
+      Promise.reject(error);
+    } finally {
+      setIsPending(false);
+    }
+  };
+
+  /**
    * onUploadProgress
    * @param snapshot
    */
@@ -55,10 +86,13 @@ function useStorage(options: UseStorageOptions = {}) {
   };
 
   /**
-   * upload
+   * uploadFileWithProgress
    * @returns Download URL
    */
-  const uploadFile = (file: File, name?: string): Promise<string> => {
+  const uploadFileWithProgress = (
+    file: File,
+    name?: string
+  ): Promise<string> => {
     return new Promise((resolve, reject) => {
       reset();
       setIsPending(true);
@@ -119,6 +153,7 @@ function useStorage(options: UseStorageOptions = {}) {
     progress,
     error,
     uploadFile,
+    uploadFileWithProgress,
     deleteFile,
   };
 }

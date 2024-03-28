@@ -11,32 +11,25 @@ import {
 } from "firebase/firestore";
 import useSWR, { SWRConfiguration } from "swr";
 import { unset } from "lodash";
+import { merge } from "ts-deepmerge";
 
 import { Document, AllowType, DocumentOptions } from "../types";
-import { getDocument } from "../firestore";
+import { getDocument, withDocumentDataSanitized } from "../firestore";
 
 export type UseDocOptions = DocumentOptions & {
   /** SWR configuration options */
   swrConfig?: SWRConfiguration;
 };
 
-function removeIdFromData<
-  Data extends object = {},
-  Doc extends Document = Document<Data>
->(data: Doc) {
-  const output = {};
-  Object.keys(data)
-    .filter((key) => key !== "id")
-    .forEach((key) => {
-      output;
-    });
-}
+const defaultOptions: UseDocOptions = {
+  sanitize: {},
+};
 
 function useDoc<
   Data extends object = {},
   Doc extends Document = Document<Data>
 >(path: string | null = null, options: UseDocOptions = {}) {
-  const { parseDates, swrConfig } = options;
+  const { parseDates, swrConfig, sanitize } = merge(defaultOptions, options);
 
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<FirestoreError | null>(null);
@@ -70,15 +63,17 @@ function useDoc<
       setError(null);
       setIsPending(true);
 
+      const finalData = withDocumentDataSanitized(newData, sanitize);
+
       try {
         (await id)
-          ? setDoc(doc(getFirestore(), collectionName, id as string), newData)
-          : addDoc(collection(getFirestore(), collectionName), newData);
+          ? setDoc(doc(getFirestore(), collectionName, id as string), finalData)
+          : addDoc(collection(getFirestore(), collectionName), finalData);
         // @ts-ignore
         connectedMutate((prevState = {}) => {
           return {
             ...prevState,
-            ...newData,
+            ...finalData,
           };
         });
       } catch (error) {
@@ -105,10 +100,8 @@ function useDoc<
       const id = updatedData.id || data?.id;
       const ref = doc(getFirestore(), path);
       try {
-        // Make sure id is removed
-        unset(updatedData, "id");
-
-        await setDoc(ref, updatedData);
+        await setDoc(ref, withDocumentDataSanitized(updatedData, sanitize));
+        /* istanbul ignore next */
         // @ts-ignore
         connectedMutate((prevState = {}) => {
           const newState = {
