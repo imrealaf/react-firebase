@@ -1,6 +1,6 @@
 {
   "name": "fm-react-firebase",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "",
   "main": "dist/index.js",
   "files": [
