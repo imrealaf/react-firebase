@@ -1,4 +1,4 @@
-import useSWR, { SWRConfiguration } from "swr";
+import useSWR, { SWRConfiguration, useSWRConfig } from "swr";
 
 import { getCollection } from "../firestore";
 import { Document, DocumentOptions, CollectionQuery } from "../types";
@@ -28,7 +28,7 @@ function useCollection<
     swrConfig
   );
 
-  const { data, isValidating, isLoading, error } = swr;
+  const { data, isValidating, isLoading, error, mutate: revalidate } = swr;
 
   return {
     data,
@@ -36,6 +36,7 @@ function useCollection<
     isValidating,
     error,
     empty: data && data.length === 0,
+    revalidate,
   };
 }
 

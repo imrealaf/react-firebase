@@ -8,6 +8,7 @@ import {
   DocumentData,
   FirestoreError,
   addDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import useSWR, { SWRConfiguration } from "swr";
 import { unset } from "lodash";
@@ -28,14 +29,14 @@ const defaultOptions: UseDocOptions = {
 function useDoc<
   Data extends object = {},
   Doc extends Document = Document<Data>
->(path: string | null = null, options: UseDocOptions = {}) {
+>(initialPath: string | null = null, options: UseDocOptions = {}) {
   const { parseDates, swrConfig, sanitize } = merge(defaultOptions, options);
 
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<FirestoreError | null>(null);
 
   const swr = useSWR<Doc | null>(
-    path,
+    initialPath,
     async (path: string) => {
       setError(null);
       try {
@@ -50,7 +51,7 @@ function useDoc<
     swrConfig
   );
 
-  const { data, isLoading, isValidating, mutate: connectedMutate } = swr;
+  const { data, isLoading, isValidating, mutate: revalidate } = swr;
 
   const add = useCallback(
     async (
@@ -70,7 +71,7 @@ function useDoc<
           ? setDoc(doc(getFirestore(), collectionName, id as string), finalData)
           : addDoc(collection(getFirestore(), collectionName), finalData);
         // @ts-ignore
-        connectedMutate((prevState = {}) => {
+        revalidate((prevState = {}) => {
           return {
             ...prevState,
             ...finalData,
@@ -83,7 +84,7 @@ function useDoc<
         setIsPending(false);
       }
     },
-    [path, connectedMutate]
+    [revalidate]
   );
 
   /**
@@ -92,18 +93,18 @@ function useDoc<
    */
   const update = useCallback(
     async (updatedData: Partial<AllowType<DocumentData, FieldValue>>) => {
-      if (!path) return;
+      if (!initialPath) return;
 
       setError(null);
       setIsPending(true);
 
       const id = updatedData.id || data?.id;
-      const ref = doc(getFirestore(), path);
+      const ref = doc(getFirestore(), initialPath);
       try {
         await setDoc(ref, withDocumentDataSanitized(updatedData, sanitize));
         /* istanbul ignore next */
         // @ts-ignore
-        connectedMutate((prevState = {}) => {
+        revalidate((prevState = {}) => {
           const newState = {
             ...prevState,
             ...updatedData,
@@ -118,7 +119,33 @@ function useDoc<
         setIsPending(false);
       }
     },
-    [path, connectedMutate]
+    [initialPath, revalidate]
+  );
+
+  /**
+   * remove
+   * @description delete a document with given path. Uses initial path if path is not provided
+   */
+  const remove = useCallback(
+    async (path?: string) => {
+      let removePath = initialPath || path || "";
+      if (!removePath) return;
+
+      setError(null);
+      setIsPending(true);
+
+      const ref = doc(getFirestore(), removePath);
+      try {
+        await deleteDoc(ref);
+        return true;
+      } catch (error) {
+        console.log(error);
+        setError(error as FirestoreError);
+      } finally {
+        setIsPending(false);
+      }
+    },
+    [initialPath]
   );
 
   return {
@@ -131,6 +158,8 @@ function useDoc<
     error,
     add,
     update,
+    remove,
+    revalidate,
   };
 }
 
