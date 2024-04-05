@@ -195,15 +195,15 @@ export const createQuery = <Doc extends object = {}>(
   }
 
   if (endAt) {
-    constraints.push(startAtConstraint(endAt));
+    constraints.push(endAtConstraint(endAt));
   }
 
   if (startAfter) {
-    constraints.push(startAtConstraint(startAfter));
+    constraints.push(startAfterConstraint(startAfter));
   }
 
   if (endBefore) {
-    constraints.push(startAtConstraint(endBefore));
+    constraints.push(endBeforeConstraint(endBefore));
   }
 
   return query(collection(getFirestore(), path), ...constraints);

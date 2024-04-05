@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   getAuth,
-  signOut,
+  signOut as signOutFirebase,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
@@ -45,20 +45,17 @@ function useAuth(options: UseAuthOptions = {}) {
   /**
    * resetSignIn
    */
-  const resetSignIn = () => {
+  const resetSignIn = useCallback(() => {
     setSignInPending(false);
     setSignInError(undefined);
     setSignInSuccess(false);
-  };
+  }, []);
 
   /**
-   * signIn api
+   * signInWithEmail
    */
-  const signIn = {
-    /**
-     * signIn.withEmail
-     */
-    withEmail: async (email: string, password: string) => {
+  const signInWithEmail = useCallback(
+    async (email: string, password: string) => {
       if (email && password) {
         resetSignIn();
         setSignInPending(true);
@@ -84,10 +81,14 @@ function useAuth(options: UseAuthOptions = {}) {
         }
       }
     },
+    [getAuth, signInWithEmailAndPassword]
+  );
 
-    /**
-     * signIn state
-     */
+  /**
+   * signIn api
+   */
+  const signIn = {
+    withEmail: signInWithEmail,
     pending: signInPending,
     success: signInSuccess,
     error: signInError,
@@ -95,13 +96,19 @@ function useAuth(options: UseAuthOptions = {}) {
   };
 
   /**
-   * signUp api
+   * resetSignUp
    */
-  const signUp = {
-    /**
-     * signUp.withEmail
-     */
-    withEmail: async (email: string, password: string) => {
+  const resetSignUp = useCallback(() => {
+    setSignUpPending(false);
+    setSignUpError(undefined);
+    setSignUpSuccess(false);
+  }, []);
+
+  /**
+   * signUpWithEmail
+   */
+  const signUpWithEmail = useCallback(
+    async (email: string, password: string) => {
       if (email && password) {
         setSignUpPending(true);
         try {
@@ -120,21 +127,33 @@ function useAuth(options: UseAuthOptions = {}) {
         }
       }
     },
+    [getAuth, createUserWithEmailAndPassword]
+  );
 
-    /**
-     * signUp states
-     */
+  /**
+   * signUp api
+   */
+  const signUp = {
+    withEmail: signUpWithEmail,
     pending: signUpPending,
     success: signUpSuccess,
     error: signUpError,
+    reset: resetSignUp,
   };
+
+  /**
+   * signOut
+   */
+  const signOut = useCallback(async () => {
+    await signOutFirebase(getAuth());
+  }, [getAuth, signOutFirebase]);
 
   return {
     user,
     userClaims,
     signIn,
     signUp,
-    signOut: async () => await signOut(getAuth()),
+    signOut,
   };
 }
 
