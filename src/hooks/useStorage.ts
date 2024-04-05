@@ -61,7 +61,7 @@ function useStorage(options: UseStorageOptions = {}) {
         setIsPending(false);
       }
     },
-    [getStorage, uploadBytes, getDownloadURL, generateFilename]
+    [getStorage, uploadBytes, getDownloadURL]
   );
 
   /**
@@ -81,7 +81,7 @@ function useStorage(options: UseStorageOptions = {}) {
         setIsPending(false);
       }
     },
-    [getStorage, getStoragePathRef, deleteObject]
+    [getStorage, deleteObject]
   );
 
   return {
