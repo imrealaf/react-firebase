@@ -11,7 +11,6 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import useSWR, { SWRConfiguration } from "swr";
-import { unset } from "lodash";
 import { merge } from "ts-deepmerge";
 
 import { Document, AllowType, DocumentOptions } from "../types";

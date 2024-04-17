@@ -55,5 +55,5 @@ export function mockGetDocs(data?: Record<string, Record<string, any>>) {
 }
 
 export function mockUploadBytes() {
-  jest.spyOn(storage, "uploadBytesResumable").mockImplementation();
+  jest.spyOn(storage, "uploadBytes").mockImplementation();
 }

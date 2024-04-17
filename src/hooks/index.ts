@@ -6,3 +6,5 @@ export * from "./useAuth";
 export { default as useAuth } from "./useAuth";
 export * from "./useStorage";
 export { default as useStorage } from "./useStorage";
+export * from "./useDb";
+export { default as useDb } from "./useDb";

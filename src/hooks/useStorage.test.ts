@@ -11,10 +11,7 @@ jest.mock("firebase/storage", () => ({
 }));
 
 test("uploads a file with progress", async () => {
-  const setProgress = jest.fn();
   mockUploadBytes();
-
-  jest.spyOn(React, "useState").mockImplementation(mockUseState(setProgress));
 
   const { result } = renderHook(() =>
     useStorage({
@@ -22,13 +19,12 @@ test("uploads a file with progress", async () => {
     })
   );
 
-  const { uploadFileWithProgress } = result.current;
+  const { uploadFile } = result.current;
 
   const file = new File([""], "darthvader.png");
 
   waitFor(async () => {
-    await uploadFileWithProgress(file);
-    expect(storage.uploadBytesResumable).toHaveBeenCalled();
-    expect(setProgress).toHaveBeenCalled();
+    await uploadFile(file);
+    expect(storage.uploadBytes).toHaveBeenCalled();
   });
 });
